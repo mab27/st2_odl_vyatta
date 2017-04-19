@@ -49,9 +49,11 @@ sudo service brcd-ui {start|stop|status|restart|configure}
 
 ## Actions & Workflows:
 
+- **mount** / **unmount**:
+
 - **cfg_interface** 	/ 	**del_interface**
 - **cfg_ip_route** 		/ 	**del_ip_route**
-- **cfg_ebgp_peering** 	/ 	**del_ebgp_peering**
+- **cfg_ebgp** 			/ 	**del_ebgp**
 - **adv_ebgp_prefix** 	/ 	**del_ebgp_prefix**
 - **cfg_ipsec** 		/ 	**del_ipsec**
 - **cfg_fw_rule** 		/ 	**del_fw_rule**
@@ -61,22 +63,10 @@ sudo service brcd-ui {start|stop|status|restart|configure}
 - **show_ip_route**
 - **show_bgp_sum**
 - **show_bgp_neighbors**
-- **show_vpn_ipsec_status**
+- **show_vpn**
 - **show_fw**
 
-- **mount** / **unmount**: Mount / Unmount a device (in the NETCONF way) on the BSC controller.
-- **wf_cfg_interface** : Workflow to configure an interface on a device.
-- **wf_cfg_ip_route** / **wf_del_ip_route**: Workflow to configure / delete a static route on a device.
-- **wf_cfg_ebgp**: Workflow to configure an eBGP peering between two devices.
-- **wf_cfg_ipsec**: Workflow to configure an IPSec tunnel between two devices.
-- **wf_del_vpn**: Workflow to delete all VPN configuration, including IPSec, on a device.
-- **show_interfaces**: Action that shows the operational state of interfaces.
-- **show_ip_route**: Action that shows the operational state of static routes.
-- **show_security**: Action that shows the operational state of everything under security.
-- **show_vpn**: Action that shows the operational state of ipsec VPNs.
-- **show_run_conf**: Action that copies the running configuration to a file.
-- **show_startup_conf**: Action that copies the startup configuration to a file.
-- **copy_cfg**: Action that copies the running configuration to the startup configuration (vRouter supports :writable-running).
+- **show_run_conf**		/ **show_startup_conf** 	/ **copy_cfg**
 
 
 ### Examples:
@@ -90,6 +80,9 @@ st2 run odl_vyatta.unmount mountName=vR001 deviceIP=192.168.0.10
 
 - Interface management:
 ```
+st2 run odl_vyatta.cfg_interface deviceName=vR001 intfType=loopback intfNum=lo10 address=10.10.10.10/32
+
+st2 run odl_vyatta.show_interfaces deviceName=vR001
 
 ```
 
