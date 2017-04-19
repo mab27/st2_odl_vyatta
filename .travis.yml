@@ -1,0 +1,45 @@
+language: python
+python:
+  - 2.7
+
+sudo: required
+dist: trusty
+
+services:
+  - docker
+
+env:
+  global:
+    # Change for correct values.
+    ######################################################################
+    - GIT_DIRECTORY=st2_odl_vyatta
+    - LOCAL_DIRECTORY=odl_vyatta
+
+install:
+  # install all of the dependencies you need here
+  ######################################################################
+  - docker run -d -P --name=st2 -v /home/travis/build/mab27/$GIT_DIRECTORY:/opt/stackstorm/packs/$LOCAL_DIRECTORY mab27/docker_st2
+  - docker exec -it st2 st2 --version
+  - docker exec -it st2 tree
+
+script:
+  # execute all of the commands which should make the build pass or fail
+  ######################################################################
+  # By default ST2 comes with 61 actions
+  - docker exec -it st2 /bin/sh -c "sudo st2ctl reload"
+  - docker exec -it st2 st2 action list -p $LOCAL_DIRECTORY
+  - docker exec -it st2 st2 action-alias list -p $LOCAL_DIRECTORY
+  - docker exec -it st2 st2 rule list -p $LOCAL_DIRECTORY
+
+branches:
+  only:
+   - master
+
+notifications:
+  email:
+    recipients:
+      - mabdelou@brocade.com
+    on_failure: always
+    on_success: always
+  slack: 
+    brcd-fr:knJ74vqrMhPxWHRdHM3gkqFv
