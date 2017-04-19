@@ -1,0 +1,18 @@
+---
+name: "del_ipsec"
+description: "Delete an IPSec"
+pack: odl_vyatta
+runner_type: "action-chain"
+entry_point: "chains/del_ipsec.yaml"
+enabled: true
+parameters:
+    deviceName:
+        type: string
+        description: Mounted name of the vRouter
+        required: true
+        position: 0
+notify:
+  on-complete:
+    message: '"@channel: Action succeeded."'
+    routes:
+      - "slack"

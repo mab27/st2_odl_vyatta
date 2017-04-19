@@ -1,0 +1,58 @@
+{
+  "vyatta-security-vpn-ipsec-v1:vpn": {
+    "ipsec": {
+      "ike-group": [
+        {
+          "tagnode": "{{ ikeGroup }}",
+          "ike-version": "{{ ikeVersion }}",
+          "lifetime": "{{ ikeLifetime }}",
+          "proposal": [
+            {
+              "tagnode": "{{ ikeProposal }}",
+              "hash": "{{ ikeHashAlg }}",
+              "encryption": "{{ ikeEncryption }}"
+            }
+          ]
+        }
+      ],
+      "esp-group": [
+        {
+          "tagnode": "{{ espGroup }}",
+          "proposal": [
+            {
+              "tagnode": "{{ espProposal }}",
+              "hash": "{{ espHashAlg }}",
+              "encryption": "{{ espEncryption }}"
+            }
+          ],
+          "lifetime": "{{ espLifetime }}"
+        }
+      ],
+      "site-to-site": {
+        "peer": [
+          {
+            "tagnode": "{{ peerIP }}",
+            "ike-group": "{{ ikeGroup }}",
+            "local-address": "{{ localIP }}",
+            "default-esp-group": "{{ espGroup }}",
+            "tunnel": [
+              {
+                "tagnode": "{{ tunnelID }}",
+                "local": {
+                  "prefix": "{{ localPrefix }}"
+                },
+                "remote": {
+                  "prefix": "{{ remotePrefix }}"
+                }
+              }
+            ],
+            "authentication": {
+              "mode": "pre-shared-secret",
+              "pre-shared-secret": "{{ psk }}"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

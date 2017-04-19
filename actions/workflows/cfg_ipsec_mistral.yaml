@@ -1,0 +1,81 @@
+version: '2.0'
+name: odl_vyatta.cfg_ipsec_mistral
+description: Mistral Workflow to configure IPSec tunnel.
+workflows:
+    main:
+        type: direct
+        input:
+            - eastDeviceName
+            - eastTunnelIP
+            - eastPrefix
+            - westDeviceName
+            - westTunnelIP
+            - westPrefix
+            - ikeGroup
+            - ikeProposal
+            - ikeVersion
+            - ikeEncryption
+            - ikeHashAlg
+            - ikeLifetime
+            - espGroup
+            - espProposal
+            - espEncryption
+            - espHashAlg
+            - espLifetime
+            - psk
+            - tunnelID
+        output:
+            stdout: <% $.stdout %>
+        tasks:
+            initial:
+                action: core.local 
+                input:
+                    cmd: "echo Sending IPSec Configuratiton ..."
+                on-success:
+                    - east_cfg_ipsec
+                    - west_cfg_ipsec
+            east_cfg_ipsec:
+                action: "odl_vyatta.cfg_ipsec"
+                input:
+                    deviceName: "{{eastDeviceName}}"
+                    peerIP: "{{westTunnelIP}}"
+                    localIP: "{{eastTunnelIP}}"
+                    localPrefix: "{{eastPrefix}}"
+                    remotePrefix: "{{westPrefix}}"
+                on-success:
+                    - saving
+            west_cfg_ipsec:
+                action: "odl_vyatta.cfg_ipsec"
+                input:
+                    deviceName: "{{westDeviceName}}"
+                    peerIP: "{{eastTunnelIP}}"
+                    localIP: "{{westTunnelIP}}"
+                    localPrefix: "{{westPrefix}}"
+                    remotePrefix: "{{eastPrefix}}"
+                on-success:
+                    - saving
+            saving:
+                join: all
+                action: core.local 
+                input:
+                    cmd: "echo Saving Configuratiton ..."
+                on-success:
+                    - east_copy_cfg
+                    - west_copy_cfg
+            east_copy_cfg:
+                action: "odl_vyatta.copy_cfg"
+                input:
+                    deviceName: "{{eastDeviceName}}"
+                on-success:
+                    - finished
+            west_copy_cfg:
+                action: "odl_vyatta.copy_cfg"
+                input:
+                    deviceName: "{{westDeviceName}}"
+                on-success:
+                    - finished
+            finished:
+                join: all
+                action: core.local 
+                input:
+                    cmd: "echo Configuration Done ..."

@@ -1,0 +1,135 @@
+---
+name: 0_cfg_ipsec
+pack: odl_vyatta
+description: Internal action - Configure an IPSec tunnel
+runner_type: python-script
+entry_point: "0_cfg_ipsec.py"
+enabled: true
+parameters:
+    controllerIP:
+        type: string
+        description: IP address of BSC
+        required: true
+        default: localhost
+        position: 0
+    controllerUser:
+        type: string
+        description: Username of BSC
+        required: true
+        default: admin
+        position: 1
+    controllerPW:
+        type: string
+        description: Password of BSC
+        required: true
+        default: admin
+        secret: true
+        position: 2
+    deviceName:
+        type: string
+        description: Mounted name of the vRouter
+        required: true
+        position: 3
+    peerIP:
+        type: string
+        description: IP address of the remote peer
+        required: true
+        position: 4
+    localIP:
+        type: string
+        description: IP address of the tunnel
+        required: true
+        position: 5
+    localPrefix:
+        type: string
+        description: Local IP Prefix
+        required: true
+        position: 6
+    remotePrefix:
+        type: string
+        description: Remote IP Prefix
+        required: true
+        position: 7
+    ikeGroup:
+        type: string
+        description: IKE Group 
+        required: true
+        default: IKE-1
+        position: 8
+    ikeProposal:
+        type: integer
+        description: Proposal of IKE Group 
+        required: true
+        default: 1
+        position: 9
+    ikeVersion:
+        type: integer
+        description: IKE version 
+        required: true
+        default: 2
+        position: 10
+    ikeEncryption:
+        type: string
+        description: Encryption algorithm for IKE group  
+        required: true
+        default: aes256
+        position: 11
+    ikeHashAlg:
+        type: string
+        description: Hash algorithm for IKE group
+        required: true
+        default: sha1
+        position: 12
+    ikeLifetime:
+        type: integer
+        description: Lifetime of the IKE group
+        required: true
+        default: 3600
+        position: 13
+    espGroup:
+        type: string
+        description: IKE Group 
+        required: true
+        default: ESP-1
+        position: 14
+    espProposal:
+        type: integer
+        description: Proposal of ESP Group 
+        required: true
+        default: 1
+        position: 15
+    espEncryption:
+        type: string
+        description: Encryption algorithm for ESP group  
+        required: true
+        default: aes256
+        position: 16
+    espHashAlg:
+        type: string
+        description: Hash algorithm for ESP group
+        required: true
+        default: sha1
+        position: 17
+    espLifetime:
+        type: integer
+        description: Lifetime of the ESP group
+        required: true
+        default: 3600
+        position: 18
+    psk:
+        type: string
+        description: Pre Shared Key
+        required: true
+        default: TheAmazingPSK
+        position: 19
+    tunnelID:
+        type: integer
+        description: Tunnel ID
+        required: true
+        default: 1
+        position: 20
+notify:
+  on-complete:
+    message: "\"@channel: Action succeeded.\""
+    routes:
+      - "slack"

@@ -1,0 +1,14 @@
+---
+    chain:
+        -
+            name: "del_ipsec"
+            ref: "odl_vyatta.0_del_ipsec"
+            parameters:
+                deviceName: "{{deviceName}}"
+            on-success: "copy_cfg"
+        -
+            name: "copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{deviceName}}"
+    default: "del_ipsec"

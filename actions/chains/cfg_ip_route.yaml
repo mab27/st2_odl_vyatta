@@ -1,0 +1,16 @@
+---
+    chain:
+        -
+            name: "cfg_ip_route"
+            ref: "odl_vyatta.0_cfg_ip_route"
+            parameters:
+                deviceName: "{{deviceName}}"
+                subnet: "{{subnet}}"
+                nextHop: "{{nextHop}}"
+            on-success: "copy_cfg"
+        -
+            name: "copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{deviceName}}"
+    default: "cfg_ip_route"

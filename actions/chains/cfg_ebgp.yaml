@@ -1,0 +1,32 @@
+---
+    chain:
+        -
+            name: "east_cfg_ebgp"
+            ref: "odl_vyatta.0_cfg_ebgp"
+            parameters:
+                deviceName: "{{eastDeviceName}}"
+                localAS: "{{eastASN}}"
+                remoteAS: "{{westASN}}"
+                neighborIP: "{{westPeeringIP}}" 
+            on-success: "west_cfg_ebgp"
+        -
+            name: "west_cfg_ebgp"
+            ref: "odl_vyatta.0_cfg_ebgp"
+            parameters:
+                deviceName: "{{westDeviceName}}"
+                localAS: "{{westASN}}"
+                remoteAS: "{{eastASN}}"
+                neighborIP: "{{eastPeeringIP}}" 
+            on-success: "east_copy_cfg"
+        -
+            name: "east_copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{eastDeviceName}}"
+            on-success: "west_copy_cfg"
+        -
+            name: "west_copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{westDeviceName}}"
+    default: "east_cfg_ebgp"

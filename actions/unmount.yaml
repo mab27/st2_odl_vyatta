@@ -1,0 +1,32 @@
+---
+name: unmount
+pack: odl_vyatta
+description: Delete a mounted vRouter on the BSC
+runner_type: python-script
+entry_point: "unmount.py"
+enabled: true
+parameters:
+    controllerIP:
+        type: string
+        description: IP address of BSC
+        required: true
+        default: localhost
+        position: 0
+    controllerUser:
+        type: string
+        description: Username of BSC
+        required: true
+        default: admin
+        position: 1
+    controllerPW:
+        type: string
+        description: Password of BSC
+        required: true
+        default: admin
+        secret: true
+        position: 2
+    mountName:
+        type: string
+        description: Name of the mounted device
+        required: true
+        position: 3

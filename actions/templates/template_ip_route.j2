@@ -1,0 +1,14 @@
+{
+  "vyatta-protocols-static-v1:static": {
+    "route": [
+      {
+        "tagnode": "{{ subnet }}",
+        "next-hop": [
+          {
+            "tagnode": "{{ nextHop }}"
+          }
+        ]
+      }
+    ]
+  }
+}

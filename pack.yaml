@@ -1,0 +1,9 @@
+---
+name: odl_vyatta
+description: Contains actions and workflows to manipulate interact with vRouter
+keywords:
+    - example
+    - test
+version: 0.2.1
+author: Mehdi Abdelouahab
+email: mabdelou@brocade.com

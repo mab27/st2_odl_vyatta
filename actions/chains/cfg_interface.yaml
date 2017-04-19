@@ -1,0 +1,17 @@
+---
+    chain:
+        -
+            name: "cfg_interface"
+            ref: "odl_vyatta.0_cfg_interface"
+            parameters:
+                deviceName: "{{deviceName}}"
+                intfType: "{{intfType}}"
+                intfNum: "{{intfNum}}"
+                address: "{{address}}"
+            on-success: "copy_cfg"
+        -
+            name: "copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{deviceName}}"
+    default: "cfg_interface"

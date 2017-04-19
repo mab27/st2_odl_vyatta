@@ -1,0 +1,33 @@
+---
+name: "cfg_interface"
+description: "Configure an interface"
+pack: odl_vyatta
+runner_type: "action-chain"
+entry_point: "chains/cfg_interface.yaml"
+enabled: true
+parameters:
+    deviceName:
+        type: string
+        description: Mounted name of the vRouter
+        required: true
+        position: 0
+    intfType:
+        type: string
+        description: Type of interface such as dataplane or loopback
+        required: true
+        position: 1
+    intfNum:
+        type: string
+        description: Interface number in the form of dp0pXpY or LoXY  
+        required: true
+        position: 2
+    address:
+        type: string
+        description: IP Address of the interface
+        required: true
+        position: 3
+notify:
+  on-complete:
+    message: '"@channel: Action succeeded."'
+    routes:
+      - "slack"

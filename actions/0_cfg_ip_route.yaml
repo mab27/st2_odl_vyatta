@@ -1,0 +1,47 @@
+---
+name: 0_cfg_ip_route
+pack: odl_vyatta
+description: Internal action - Configure a static route
+runner_type: python-script
+entry_point: "0_cfg_ip_route.py"
+enabled: true
+parameters:
+    controllerIP:
+        type: string
+        description: IP address of BSC
+        required: true
+        default: localhost
+        position: 0
+    controllerUser:
+        type: string
+        description: Username of BSC
+        required: true
+        default: admin
+        position: 1
+    controllerPW:
+        type: string
+        description: Password of BSC
+        required: true
+        default: admin
+        secret: true
+        position: 2
+    deviceName:
+        type: string
+        description: Mounted name of the vRouter
+        required: true
+        position: 3
+    subnet:
+        type: string
+        description: Destination IP subnet
+        required: true
+        position: 4
+    nextHop:
+        type: string
+        description: NextHop IP Address
+        required: true
+        position: 5
+notify:
+  on-complete:
+    message: "\"@channel: Action succeeded.\""
+    routes:
+      - "slack"

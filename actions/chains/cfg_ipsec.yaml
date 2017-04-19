@@ -1,0 +1,34 @@
+---
+    chain:
+        -
+            name: "east_cfg_ipsec"
+            ref: "odl_vyatta.0_cfg_ipsec"
+            parameters:
+                deviceName: "{{eastDeviceName}}"
+                peerIP: "{{westTunnelIP}}"
+                localIP: "{{eastTunnelIP}}"
+                localPrefix: "{{eastPrefix}}"
+                remotePrefix: "{{westPrefix}}"
+            on-success: "west_cfg_ipsec"
+        -
+            name: "west_cfg_ipsec"
+            ref: "odl_vyatta.0_cfg_ipsec"
+            parameters:
+                deviceName: "{{westDeviceName}}"
+                peerIP: "{{eastTunnelIP}}"
+                localIP: "{{westTunnelIP}}"
+                localPrefix: "{{westPrefix}}"
+                remotePrefix: "{{eastPrefix}}"
+            on-success: "east_copy_cfg"
+        -
+            name: "east_copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{eastDeviceName}}"
+            on-success: "west_copy_cfg"
+        -
+            name: "west_copy_cfg"
+            ref: "odl_vyatta.0_copy_cfg"
+            parameters:
+                deviceName: "{{westDeviceName}}"
+    default: "east_cfg_ipsec"

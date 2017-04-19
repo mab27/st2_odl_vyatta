@@ -1,0 +1,102 @@
+---
+name: "cfg_ipsec"
+description: "Configure IPSec Tunnel"
+pack: odl_vyatta
+runner_type: "action-chain"
+entry_point: "chains/cfg_ipsec.yaml"
+enabled: true
+parameters:
+    eastDeviceName:
+        type: string
+        description: Mounted name of the East vRouter
+        required: true
+    eastTunnelIP:
+        type: string
+        description: IP address of the tunnel end on East vRouter
+        required: true    
+    eastPrefix:
+        type: string
+        description: IP Prefix of East vRouter
+        required: true   
+    westDeviceName:
+        type: string
+        description: Mounted name of the West vRouter
+        required: true   
+    westTunnelIP:
+        type: string
+        description: IP address of the tunnel end on West vRouter
+        required: true    
+    westPrefix:
+        type: string
+        description: IP Prefix of West vRouter
+        required: true     
+    ikeGroup:
+        type: string
+        description: IKE Group 
+        required: true
+        default: IKE-1
+    ikeProposal:
+        type: integer
+        description: Proposal of IKE Group 
+        required: true
+        default: 1
+    ikeVersion:
+        type: integer
+        description: IKE version 
+        required: true
+        default: 2
+    ikeEncryption:
+        type: string
+        description: Encryption algorithm for IKE group  
+        required: true
+        default: aes256
+    ikeHashAlg:
+        type: string
+        description: hash algorithm for IKE group
+        required: true
+        default: sha1
+    ikeLifetime:
+        type: integer
+        description: Lifetime of the IKE group
+        required: true
+        default: 3600
+    espGroup:
+        type: string
+        description: IKE Group 
+        required: true
+        default: ESP-1
+    espProposal:
+        type: integer
+        description: Proposal of ESP Group 
+        required: true
+        default: 1
+    espEncryption:
+        type: string
+        description: Encryption algorithm for ESP group  
+        required: true
+        default: aes256
+    espHashAlg:
+        type: string
+        description: hash algorithm for ESP group
+        required: true
+        default: sha1
+    espLifetime:
+        type: integer
+        description: Lifetime of the ESP group
+        required: true
+        default: 3600
+    psk:
+        type: string
+        description: Pre Shared Key
+        required: true
+        default: TheAmazingPSK
+    tunnelID:
+        type: integer
+        description: Tunnel ID
+        required: true
+        default: 1   
+notify:
+  on-complete:
+    message: '"@channel: Action succeeded."'
+    routes:
+      - "slack"

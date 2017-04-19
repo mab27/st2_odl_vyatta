@@ -1,0 +1,43 @@
+---
+name: "cfg_ebgp"
+description: "Configure eBGP peering"
+pack: odl_vyatta
+runner_type: "action-chain"
+entry_point: "chains/cfg_ebgp.yaml"
+enabled: true
+parameters:
+    eastDeviceName:
+        type: string
+        description: Mounted name of the East vRouter
+        required: true
+        position: 0
+    eastPeeringIP:
+        type: string
+        description: IP address of the peering on East-end
+        required: true
+        position: 1
+    eastASN:
+        type: string
+        description: AS Number of East vRouter
+        required: true
+        position: 2
+    westDeviceName:
+        type: string
+        description: Mounted name of the West vRouter
+        required: true
+        position: 3
+    westPeeringIP:
+        type: string
+        description: IP address of the peering on West-end
+        required: true
+        position: 4
+    westASN:
+        type: string
+        description: AS Number of West vRouter
+        required: true
+        position: 5
+notify:
+  on-complete:
+    message: '"@channel: Action succeeded."'
+    routes:
+      - "slack"

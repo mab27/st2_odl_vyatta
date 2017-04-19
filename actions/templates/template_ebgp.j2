@@ -1,0 +1,21 @@
+{
+  "protocols": {
+    "vyatta-protocols-bgp-v1:bgp": [
+      {
+        "tagnode": {{ localAS }},
+        "neighbor": [
+          {
+            "tagnode": "{{ neighborIP }}",
+            "address-family": {
+              "ipv4-unicast": {}
+            },
+            "remote-as": {{ remoteAS }}
+          }
+        ],
+        "address-family": {
+          "ipv4-unicast": {}
+        }
+      }
+    ]
+  }
+}
