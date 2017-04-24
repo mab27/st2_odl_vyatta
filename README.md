@@ -7,7 +7,12 @@
 - This pack contains simple actions and workflows to interact with the Brocade 5600 vRouter including: interfaces mgmt, routing, Firewalling, IPSec, via an OpenDayLight Controller.
 - The ODL Controller used in this repo is the commercial distribution from Brocade: Brocade SDN Controller (BSC) version 4.1.
 - Action runner for the different actions is ```python-script``` which generates REST calls to the ODL Controller (BSC).
-- This pack has been written based on the Brocade Vyatta Network OS configuration manuals: 
+- For information on Brocade SDN Controller:
+    - [Brocade SDN Controller User Guide, 4.0.0](http://www.brocade.com/content/html/en/sdn-controller/4.0.0/bsc-400-userguide/GUID-4FC280C8-B75D-4AED-9576-854687A8DE77-homepage.html)
+    - To understand the structure of the RESTConf calls (How YANG data-models are exposed via the REST API), use the embeded api-doc explorer. This tool is accessible on the controller UI at **{{ip_adress_of_bsc}}:8181/apidoc/explorer/index.html**. go to "Mounted Ressources" and click on the device you are interested in. You will obtain the full ist of CRUD operations available, to help you build your northbound calls based on  the southbound rpc you are looking for.
+- For information on StackStorm:
+    - [Documentation](https://docs.stackstorm.com/overview.html) 
+    - [Video-StackStorm-101](https://www.youtube.com/watch?v=CwEzO_f-q3s&t=907s)
 
 ## What is OpenDayLight (Brief introduction):
 - Vendor-driven consortium for developing open-source SDN controller platform.
@@ -44,30 +49,33 @@ sudo service brcd-bsc {start|stop|restart|status|configure|clean [msg]}
 ```
 sudo service brcd-ui {start|stop|status|restart|configure}
 ```
-- For general information on how to use the BSC : [Brocade SDN Controller User Guide, 4.0.0](http://www.brocade.com/content/html/en/sdn-controller/4.0.0/bsc-400-userguide/GUID-4FC280C8-B75D-4AED-9576-854687A8DE77-homepage.html)
-- To understand the structure of the RESTConf calls (How YANG data-models are exposed via the REST API), use the embeded api-doc explorer. This tool is accessible on the controller UI at **{{ip_adress_of_bsc}}:8181/apidoc/explorer/index.html**. go to "Mounted Ressources" and click on the device you are interested in. You will obtain the full ist of CRUD operations available, to help you build your northbound calls based on  the southbound rpc you are looking for.
 
 ## Actions & Workflows:
 
-- **mount** / **unmount**:
+- Device's registration to the controller:
+    - **mount** / **unmount**
 
-- **cfg_interface** 	/ 	**del_interface**
-- **cfg_ip_route** 		/ 	**del_ip_route**
-- **cfg_ebgp** 			/ 	**del_ebgp**
-- **adv_ebgp_prefix** 	/ 	**del_ebgp_prefix**
-- **cfg_ipsec** 		/ 	**del_ipsec**
-- **cfg_fw_rule** 		/ 	**del_fw_rule**
-- **cfg_fw_instance** 	/ 	**del_fw_instance**
+- Configuration:
+    - cfg_interface     /   del_interface
+    - cfg_ip_route      /   del_ip_route
+    - cfg_ebgp          /   del_ebgp
+    - cfg_bgp_adv_prefix /  del_bgp_adv_prefix
+    - cfg_ipsec         /   del_ipsec
+    - cfg_fw_rule       /   del_fw_rule
+    - cfg_fw_instance   /   del_fw_instance
 
-- **show_interfaces**
-- **show_ip_route**
-- **show_bgp_sum**
-- **show_bgp_neighbors**
-- **show_vpn**
-- **show_fw**
+- Validation:
+    - show_interfaces
+    - show_ip_route
+    - show_bgp_sum
+    - show_bgp_neighbors
+    - show_fw
+    - show_vpn
 
-- **show_run_conf**		/ **show_startup_conf** 	/ **copy_cfg**
-
+- Device's information:
+    - show_run_conf
+    - show_startup_conf
+    - copy_cfg
 
 ### Examples:
 
@@ -83,7 +91,6 @@ st2 run odl_vyatta.unmount mountName=vR001 deviceIP=192.168.0.10
 st2 run odl_vyatta.cfg_interface deviceName=vR001 intfType=loopback intfNum=lo10 address=10.10.10.10/32
 
 st2 run odl_vyatta.show_interfaces deviceName=vR001
-
 ```
 
 - Static routing:
@@ -172,113 +179,6 @@ st2 trigger-instance get **trigger_id**
 st2 execution list -n 5
 ```
 
-================
-================
-================
-================
-================
-
-
-### Examples:
-
-- Trigger the **cfg_fw_rule** rule:
-
-First create a file ```body_cfg_rule_fw-1_1.json```:
-```
-{
-    "task": "cfg_fw_rule",
-    "deviceIP": "192.168.0.10",
-    "rule_set_name": "fw-1",
-    "rule_number": "1",
-    "rule_filter": {
-    	"action": "accept",
-    	"state": "enable",
-    	"protocol": "tcp",
-    	"dst_addr": "172.60.10.0/24",
-    	"dst_port": "80", 
-    	"src_addr": "10.10.10.0/8"
-    }
-}
-```
-Then, send the call via cURL command:
-```
-curl -k -H "Content-Type:application/json" -H "X-Auth-Token:$TOKEN" -d @body_cfg_rule_fw-1_1.json http://localhost:9101/v1/webhooks/vrouter
-```
-
-- Trigger again the **cfg_fw_rule** rule:
-
-First create a file ```body_cfg_rule_fw-1_2.json```:
-```
-{
-    "task": "cfg_fw_rule",
-    "deviceIP": "192.168.0.10",
-    "rule_set_name": "fw-1",
-    "rule_number": "2",
-    "rule_filter": {
-        "action": "accept",
-        "state": "enable",
-        "protocol": "tcp",
-        "dst_addr": "172.60.10.0/24",
-        "dst_port": "80", 
-        "src_addr": "10.10.10.0/8"
-    }
-}
-```
-Then, send the call via cURL command:
-```
-curl -k -H "Content-Type:application/json" -H "X-Auth-Token:$TOKEN" -d @body_cfg_rule_fw-1_2.json http://localhost:9101/v1/webhooks/vrouter
-```
-
-- Trigger the **del_fw_rule** rule:
-
-First create a file ```body_del_rule_fw-1_2.json```:
-```
-{
-    "task": "cfg_fw_rule",
-    "deviceIP": "192.168.0.10",
-    "rule_set_name": "fw_1",
-    "rule_number": "1"
-}
-```
-Then, send the call via cURL command:
-```
-curl -k -H "Content-Type:application/json" -H "X-Auth-Token:$TOKEN" -d @body_del_rule_fw-1_2.json http://localhost:9101/v1/webhooks/vrouter
-```
-
-
-- Trigger the **apply_fw_instance** rule:
-
-First create a file ```body_apply_instance_fw-1.json```:
-```
-{
-    "task": "apply_fw_instance",
-    "deviceIP": "192.168.0.10",
-    "rule_set_name": "fw-1",
-    "intfNum": "dp0p192p1",
-    "direction": "out"
-}
-```
-Then, send the call via cURL command:
-```
-curl -k -H "Content-Type:application/json" -H "X-Auth-Token:$TOKEN" -d @body_apply_instance_fw-1.json http://localhost:9101/v1/webhooks/vrouter
-```
-- Trigger the **remove_fw_instance** rule:
-
-First create a file ```body_remove_instance_fw-1.json```:
-```
-{
-    "task": "remove_fw_instance",
-    "deviceIP": "192.168.0.10",
-    "rule_set_name": "fw-1",
-    "intfNum": "dp0p192p1",
-    "direction": "out"
-}
-```
-Then, send the call via cURL command:
-```
-curl -k -H "Content-Type:application/json" -H "X-Auth-Token:$TOKEN" -d @body_remove_instance_fw-1.json http://localhost:9101/v1/webhooks/vrouter
-```
-
 ## ChatOps:
 ### What is Chatops:
 - It is about humans talking to ChatBots (and the other way around).
@@ -300,5 +200,5 @@ sudo service st2chatops restart
 ```
 - Show the firewall config on a device, type this in the chatroom:
 ```
-!show fw on 192.168.0.10 
+! 
 ```
