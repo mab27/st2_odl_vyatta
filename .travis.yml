@@ -3,7 +3,7 @@ python:
   - 2.7
 
 sudo: required
-dist: trusty
+dist: xenial
 
 services:
   - docker
@@ -26,9 +26,12 @@ script:
   # execute all of the commands which should make the build pass or fail
   ######################################################################
   # By default ST2 comes with 61 actions
-  - docker exec -it st2 /bin/sh -c "sudo st2ctl reload"
+  - docker exec -it st2 /bin/sh -c "sudo st2ctl reload --register-setup-virtualenvs"
+  - docker exec -it st2 /bin/sh -c "sudo st2ctl reload --register-actions"
   - docker exec -it st2 st2 action list -p $LOCAL_DIRECTORY
+  - docker exec -it st2 /bin/sh -c "sudo st2ctl reload --register-aliases"
   - docker exec -it st2 st2 action-alias list -p $LOCAL_DIRECTORY
+  - docker exec -it st2 /bin/sh -c "sudo st2ctl reload --register-rules"
   - docker exec -it st2 st2 rule list -p $LOCAL_DIRECTORY
 
 branches:
